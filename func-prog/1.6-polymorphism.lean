@@ -31,6 +31,9 @@ def alist : MyList Nat := MyList.nil
 def blist : MyList Nat := MyList.cons 1 MyList.nil
 #eval blist
 
+-- args in {} are implicit and you can leave them out and lean will
+-- infer them. They are used when the value of that arg is a Type
+-- and it can be inferred from later arguments.
 def length {α : Type} (xs : MyList α) : Nat :=
   match xs with
   | MyList.nil => Nat.zero
@@ -81,3 +84,40 @@ def MyList.findFirst? {α : Type} (xs : MyList α) (predicate : α → Bool) : O
 def biggerThanFive (n : Nat) : Bool := n > 5
 
 #eval MyList.findFirst? explicitPrimesUnder10 biggerThanFive
+
+-- 3.
+-- apparently you can write a product type just with ()
+-- and the type will be inferred.
+def Prod.swap {α β : Type} (pair : α × β) : β × α :=
+  (pair.snd, pair.fst)
+
+#eval Prod.swap ( "five", 5 )
+
+-- 4.
+inductive CharacterNames (α : Type) : Type where
+  | kenshin : α → CharacterNames α
+  | fma : α → CharacterNames α
+deriving Repr
+
+def characters : List (CharacterNames String) :=
+  [CharacterNames.kenshin "Yahiko", CharacterNames.fma "Edward"]
+
+-- 5
+def zip {α β : Type} (xs : List α) (ys : List β) : List (α × β) :=
+  match xs, ys with
+  | List.nil, List.nil => List.nil
+  | List.cons x xs, List.cons y ys => List.cons (x, y) (zip xs ys)
+  | List.cons x xs, List.nil => List.nil
+  | List.nil, List.cons y ys => List.nil
+
+-- same length
+#eval zip ([1,2,3] : List Nat) (["k","thx","bai"] : List String)
+
+-- x longer
+#eval zip ([1,2,3] : List Nat) (["k","thx"] : List String)
+
+-- y longer
+#eval zip ([1,2] : List Nat) (["k","thx","bai"] : List String)
+
+-- both zeros
+#eval zip ([] : List Nat) ([] : List String)
