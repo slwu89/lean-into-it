@@ -102,7 +102,7 @@ deriving Repr
 def characters : List (CharacterNames String) :=
   [CharacterNames.kenshin "Yahiko", CharacterNames.fma "Edward"]
 
--- 5
+-- 5.
 def zip {α β : Type} (xs : List α) (ys : List β) : List (α × β) :=
   match xs, ys with
   | List.nil, List.nil => List.nil
@@ -121,3 +121,33 @@ def zip {α β : Type} (xs : List α) (ys : List β) : List (α × β) :=
 
 -- both zeros
 #eval zip ([] : List Nat) ([] : List String)
+
+-- 6.
+def take {α : Type} (n : Nat) (xs : List α) : List α :=
+  match n, xs with
+  | Nat.zero, List.cons y ys => List.nil
+  | Nat.zero, List.nil => List.nil
+  | Nat.succ k, List.nil => List.nil
+  | Nat.succ k, List.cons y ys => List.cons y (take k ys)
+
+#eval take 3 ["bolete", "oyster"]
+#eval take 2 ["bolete", "oyster"]
+#eval take 1 ["bolete", "oyster"]
+#eval take 0 ["bolete", "oyster"]
+
+#eval take 1 ([] : List String)
+#eval take 0 ([] : List String)
+
+-- 7.
+-- def dist_prod {α β γ : Type} (x : (α × (β ⊕ γ))) : (α × β) ⊕ (α × γ) :=
+--   (x.fst × (x.snd).inl) ⊕ (x.fst × (x.snd).inr)
+
+-- def dist_prod {α β γ : Type} (x : (α × (β ⊕ γ))) : α × β :=
+--   x.fst × (x.snd).
+
+-- def x := (5, Sum String Nat )
+-- #check x
+
+-- #check Sum Nat String
+-- def MySum : Type := Sum Nat String
+-- #eval MySum.inl 5
