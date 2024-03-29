@@ -62,6 +62,14 @@ def howManyDogs (pets : List PetName) : Nat :=
 -- unit type
 #eval Unit.unit
 
+-- how the hell to actually get values of Product and Sum types?
+-- there ya go
+def MyProd : Prod Nat String := (5,"five")
+#eval MyProd
+
+def MySum : Sum Nat String := Sum.inl 5
+#eval MySum
+
 -- exercises:
 -- 1.
 def MyList.last? {α : Type} (xs : MyList α) : Option α :=
@@ -147,7 +155,3 @@ def take {α : Type} (n : Nat) (xs : List α) : List α :=
 
 -- def x := (5, Sum String Nat )
 -- #check x
-
--- #check Sum Nat String
--- def MySum : Type := Sum Nat String
--- #eval MySum.inl 5
