@@ -67,7 +67,7 @@ def howManyDogs (pets : List PetName) : Nat :=
 def MyProd : Prod Nat String := (5,"five")
 #eval MyProd
 
-def MySum : Sum Nat String := Sum.inl 5
+def MySum : Sum Nat String := Sum.inr "five"
 #eval MySum
 
 -- exercises:
@@ -146,12 +146,35 @@ def take {α : Type} (n : Nat) (xs : List α) : List α :=
 #eval take 1 ([] : List String)
 #eval take 0 ([] : List String)
 
--- 7.
--- def dist_prod {α β γ : Type} (x : (α × (β ⊕ γ))) : (α × β) ⊕ (α × γ) :=
---   (x.fst × (x.snd).inl) ⊕ (x.fst × (x.snd).inr)
+-- 7. this one is harder to figure out.
+def MySumS : Sum Nat String := Sum.inr "five"
+def MySumN : Sum Nat String := Sum.inl 5
 
--- def dist_prod {α β γ : Type} (x : (α × (β ⊕ γ))) : α × β :=
---   x.fst × (x.snd).
+def xs := (0, MySumS )
+def xn := (0, MySumN )
 
--- def x := (5, Sum String Nat )
--- #check x
+#eval xs.snd
+#eval xn.snd
+
+-- can we make a function that matches the ctor used by Sum?
+def sum_match {α β : Type} (x : α ⊕ β) : Bool :=
+  match x with
+  | Sum.inl _ => true
+  | Sum.inr _ => false
+
+#eval sum_match xn.snd
+#eval sum_match xs.snd
+
+-- ok, now here's the function that distributes correectly,
+-- matching on the ctor for the right projection of the product
+-- which is a sum type
+def dist_prod {α β γ : Type} (x : (α × (β ⊕ γ))) : (α × β) ⊕ (α × γ) :=
+  match x.snd with
+  | Sum.inl b => Sum.inl (x.fst, b)
+  | Sum.inr g => Sum.inr (x.fst, g)
+
+#check dist_prod xn
+#check dist_prod xs
+
+#eval dist_prod xn
+#eval dist_prod xs
