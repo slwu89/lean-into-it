@@ -178,3 +178,12 @@ def dist_prod {α β γ : Type} (x : (α × (β ⊕ γ))) : (α × β) ⊕ (α �
 
 #eval dist_prod xn
 #eval dist_prod xs
+
+-- 8. I am not sure if I am "getting" what this question is asking
+def mult2sum {α : Type} (x : Bool × α) : α ⊕ α :=
+  match x.fst with
+  | true => Sum.inl x.snd
+  | false => Sum.inr x.snd
+
+#eval mult2sum (true, 50)
+#eval mult2sum (false, 50)
