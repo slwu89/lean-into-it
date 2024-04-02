@@ -1,2 +1,1 @@
-import Lake
-#eval Lake.versionString
+def main : IO Unit := IO.println "Hello, world!"
