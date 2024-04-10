@@ -1,5 +1,6 @@
 -- type classes (like interfaces in C++)
--- let's make one for positive numbers
+
+-- let's a positive numbers
 inductive Pos : Type where
   | one : Pos
   | succ : Pos → Pos
@@ -41,12 +42,23 @@ instance : ToString Pos where
 
 #eval s!"There are {seven}"
 
+-- how to use literal numbers for Pos (e.g. 5)
+instance : OfNat Pos (n + 1) where
+  ofNat :=
+    let rec natPlusOne : Nat → Pos
+    | 0 => Pos.one
+    | k + 1 => Pos.succ (natPlusOne k)
+  natPlusOne n
+
+def eight : Pos := 8
+#eval eight
+
 -- this will let us use + (HAdd.hadd)
 instance : Add Pos where
   add := Pos.plus
 
-def eight : Pos := seven + Pos.one
-#eval eight
+def nine : Pos := seven + Pos.one + Pos.one
+#eval nine
 
 -- same for * (HMul.hMul)
 def Pos.mul : Pos → Pos → Pos
@@ -59,3 +71,23 @@ instance : Mul Pos where
 #eval [seven * Pos.one,
       seven * seven,
       Pos.succ Pos.one * seven]
+
+-- exercises:
+
+-- 1. do the Pos type but with a structure rather than inductive data type
+structure Pos1 where
+  succ ::
+  pred : Nat
+deriving Repr
+
+def Pos1.Add (n k : Pos1) : Pos1 :=
+  Pos1.succ (n.pred + k.pred + 1)
+
+def myOne : Pos1 := {pred := 0}
+def myTwo : Pos1 := {pred := 1}
+def myThree : Pos1 := {pred := 2}
+
+#eval Pos1.Add myOne myTwo
+#eval Pos1.Add myTwo myThree
+
+-- def Pos.plus (a b : Pos) : Pos := succ (a.pred + b.pred + 1)
